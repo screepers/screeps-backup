@@ -17,4 +17,4 @@ fi
 
 SCRIPT="$DIR/../screepsbackup/backup.py"
 source $ENV
-$SCRIPT "$@"
+python $SCRIPT "$@"
