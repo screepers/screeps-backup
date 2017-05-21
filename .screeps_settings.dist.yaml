@@ -1,0 +1,9 @@
+# Copy this to .screeps_settings.yaml and fill it out.
+
+# Screeps account info
+screeps_username:
+screeps_password:
+screeps_ptr: false
+
+# Only needed if backing up private server data.
+screeps_host:
