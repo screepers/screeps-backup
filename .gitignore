@@ -99,3 +99,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Don't save existing backups in this directory
+screeps-20*
+current
