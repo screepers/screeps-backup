@@ -115,7 +115,7 @@ if __name__ == "__main__":
             if segmentstring and len(segmentstring) > 0:
                 with open("%s/%s_segment_%s.json" % (directory, shard, i), "w") as text_file:
                     print('Saving segment %s from %s' % (i,shard))
-                    text_file.write(segmentstring.encode('utf-8').strip())
+                    text_file.write(segmentstring.encode('utf-8'))
 
         symlink = '%s/current' % (base_directory,)
         if os.path.lexists(symlink):
