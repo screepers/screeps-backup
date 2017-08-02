@@ -39,15 +39,26 @@ class Restore(object):
                            host=settings['screeps_host'])
         return self.apiclient
 
-    def saveMemory(self, memstring):
+    def saveMemory(self, memstring, shard):
         print('saving memory')
         api = self.getApiClient()
-        return api.set_memory('', memstring)
+        return api.set_memory('', memstring, shard)
 
-    def saveSegment(self, segid, segmentstring):
+    def saveSegment(self, segid, segmentstring, shard):
         print('saving segment %s' % segid)
         api = self.getApiClient()
-        return api.set_segment(segid, segmentstring)
+        return api.set_segment(segid, segmentstring, shard)
+
+    def getShards(self):
+        api = self.getApiClient()
+        try:
+            shard_data = api.shard_info()['shards']
+            shards = [x['name'] for x in shard_data]
+            if len(shards) < 1:
+                shards = ['shard0']
+        except:
+            shards = ['shard0']
+        return shards
 
 
 if __name__ == "__main__":
@@ -74,21 +85,23 @@ if __name__ == "__main__":
 
     restore = Restore()
 
-    mempath = "%s/memory.json" % (directory,)
-    if os.path.isfile(mempath):
-        with open(mempath, "r") as text_file:
-            memstring = text_file.read()
-            restore.saveMemory(memstring)
-            print('Memory restored.')
-    else:
-        print('No memory data found in this directory')
-        exit(-1)
+    shards = backup.getShards()
+    for shard in shards:
+        mempath = "%s/%s_memory.json" % (directory,shard)
+        if os.path.isfile(mempath):
+            with open(mempath, "r") as text_file:
+                memstring = text_file.read()
+                restore.saveMemory(memstring, shard)
+                print('Memory restored.')
+        else:
+            print('No memory data found in this directory')
+            exit(-1)
 
-    for i in range(0, 100):
-        segmentpath = "%s/segment_%s.json" % (directory, i)
-        if os.path.isfile(segmentpath):
-            with open(segmentpath, "r") as text_file:
-                segmentstring = text_file.read()
-                restore.saveSegment(i, segmentstring)
-                print('Restored segment %s' % (i,))
+        for i in range(0, 100):
+            segmentpath = "%s/%s_segment_%s.json" % (directory, shard, i)
+            if os.path.isfile(segmentpath):
+                with open(segmentpath, "r") as text_file:
+                    segmentstring = text_file.read()
+                    restore.saveSegment(i, segmentstring, shard)
+                    print('Restored segment %s' % (i,))
 
