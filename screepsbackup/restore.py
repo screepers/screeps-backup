@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     restore = Restore()
 
-    shards = backup.getShards()
+    shards = restore.getShards()
     for shard in shards:
         mempath = "%s/%s_memory.json" % (directory,shard)
         if os.path.isfile(mempath):
